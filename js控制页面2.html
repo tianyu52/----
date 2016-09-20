@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>js控制页面2</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+</head>
+<body>
+	<p><span>页面二</span></p>
+	<input type="button" value="本窗口打开页面一"/>
+	<input type="button" value="本窗口打开页面三"/>
+	<input type="button" value="关闭本窗口"/>
+</body>
+<script>
+	var btns=document.getElementsByTagName('input');
+
+	btns[0].onclick=function (){
+		window.open("js控制页面1.html","_self");
+	}
+	btns[1].onclick=function (){
+		window.open("js控制页面3.html","_self");
+	}
+	btns[2].onclick=function (){
+		window.close(); //只能关闭新建窗口
+	}
+</script>
+</html>

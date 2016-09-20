@@ -1,0 +1,165 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>大图滚动3</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<link rel="stylesheet" href="reset.css">
+<style>
+#outer{width: 386px; height: 272px; border: 1px solid red; margin:30px auto 0; overflow: hidden; position: relative;}
+#inner{width: 386px; height: 272px; overflow-x: scroll;}
+#con{float: left; width: 2702px; height: 272px;}
+#con img{width: 386px; height: 272px; float: left;}
+#num{overflow: hidden; position: absolute; bottom: 10px; left: 120px;}
+#num li{float: left; width: 22px; height: 22px; font-size: 16px; color: green; background: #ccc; margin:0 4px; line-height: 22px; text-align: center; cursor: pointer;}
+#left{width: 25px; height: 24px; background: url(images/fx1.png) 0 0 no-repeat; position: absolute; left: 0; top: 120px; cursor: pointer;}
+#right{width: 25px; height: 24px; background: url(images/fx2.png) 0 0 no-repeat; position: absolute; right: 0; top: 120px; cursor: pointer;}
+/*当前显示的数字*/
+#num .select{background: red; color: #fff;}
+</style>
+</head>
+<body>
+<div id="outer">
+	<div id="inner">
+		<div id="con">
+			<!-- <img src="images/05.jpg" alt=""> -->
+			<img src="images/01.jpg" alt="">
+			<img src="images/02.jpg" alt="">
+			<img src="images/03.jpg" alt="">
+			<img src="images/04.jpg" alt="">
+			<img src="images/05.jpg" alt="">
+			<!-- <img src="images/01.jpg" alt=""> -->
+		</div>
+		<ul id="num">
+			<li class="select">1</li>
+			<li>2</li>
+			<li>3</li>
+			<li>4</li>
+			<li>5</li>
+		</ul>
+		<p id="left"></p>
+		<p id="right"></p>
+	</div>
+</div>
+</body>
+<script type="text/javascript" src="tween.js"></script>
+<script>
+var inner=document.getElementById('inner');
+var con=document.getElementById('con');
+var num=document.getElementById('num');
+var left=document.getElementById('left');
+var right=document.getElementById('right');
+var imgs=con.getElementsByTagName('img');
+var lis=num.getElementsByTagName('li');
+var x=0,timer1=null,timer2=null,v=1;
+
+var firstImg=con.children[0].cloneNode(true);
+var lastImg=con.children[imgs.length-1].cloneNode(true);
+con.appendChild(firstImg);
+con.insertBefore(lastImg,con.children[0]);
+
+/*var firstSrc=con.children[0].getAttribute('src');
+var firstImg=document.createElement("img");
+firstImg.setAttribute('src',firstSrc);
+// firstImg.src=firstSrc;
+con.appendChild(firstImg);//复制第一张图放在最后面
+
+var lastSrc=con.children[imgs.length-1].getAttribute('src');
+var lastImg=document.createElement("img");
+lastImg.setAttribute('src',lastSrc);
+// lastImg.src=lastSrc;
+con.insertBefore(lastImg,con.children[0]);//复制最后一张图放在最前面*/
+
+inner.scrollLeft=imgs[0].offsetWidth;//起始位置
+
+function move(){//图片滚动函数
+	clearInterval(timer2);
+	var start=inner.scrollLeft;//起始位置
+	var end=imgs[0].offsetWidth*v;//结束位置
+	var step=0;//起始步数
+	var stepmax=20;//最大步数
+	var everystep=(end-start)/20;//每步所走的距离
+	for (var i = 0; i < lis.length; i++) {//去掉所有数字的样式
+		lis[i].className='';
+	};
+	lis[x].className='select';//当前显示数字的样式
+	timer2=setInterval(function (){
+		step++;
+		if (step==stepmax) {
+			step=0;
+			clearInterval(timer2);
+		};
+		start+=everystep;
+		inner.scrollLeft=start;
+		// inner.scrollLeft=Tween.Bounce.easeOut(step,start,end-start,stepmax);
+	},15)
+}
+
+// 第一步：自动走
+function automove(){
+	clearInterval(timer1);
+	timer1=setInterval(function (){//每2秒换一张图片
+		x++;
+		if (x>=lis.length) {
+			x=0;
+		};
+		v++;
+		if (v>=imgs.length) {
+			inner.scrollLeft=imgs[0].offsetWidth;
+			v=2;
+		};
+		move();
+	},2000)
+}
+
+automove();//进入页面自动执行
+
+// 第二步：点击左边
+left.onclick=function (){
+	clearInterval(timer1);
+	x--;
+	if (x<0) {
+		x=lis.length-1;
+	};
+	v--;
+	if (v<0) {
+		out.scrollLeft=imgs[0].offsetWidth*(v+1);
+		v=imgs.length-3;
+	};
+	move();
+	automove();//控制完两秒又继续走
+}
+
+// 第三步：点击右边
+right.onclick=function (){
+	clearInterval(timer1);
+	x++;
+	if (x>=lis.length) {
+		x=0;
+	};
+	v++;
+	if (v>=imgs.length) {
+		inner.scrollLeft=imgs[0].offsetWidth;
+		v=2;
+	};
+	move();
+	automove();//控制完两秒又继续走
+}
+
+// 第四步：点击数字
+for (var i = 0; i < lis.length; i++) {
+	lis[i].onclick=function (){
+		clearInterval(timer1);
+		for (var i = 0; i < lis.length; i++) {
+			if (lis[i]==this) {
+				x=i;
+				v=i+1;
+				move();
+				automove();//控制完两秒又继续走
+			};
+		};
+	}
+};
+</script>
+</html>

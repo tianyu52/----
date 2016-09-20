@@ -1,0 +1,126 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<style>
+	*{ margin:0; padding:0;}
+	#div1{ position:relative; height:240px; width:670px;}
+	.con li{ position:absolute; left:0; top:0; opacity:0;}
+	li.show{ opacity:1;}
+	.con li img { float:left;}
+	.nav{ position:absolute; bottom:0; height:22px; right:0; padding:4px 10px;}
+	.nav li{ list-style:none; text-align:center; float:left; height:22px; width:22px; border-radius:12px; background:red; margin-left:10px;}
+	li.active{ background:#666;}
+	.left{width: 25px; height: 24px; background: url(images/fx1.png) 0 0 no-repeat; position: absolute; left: 0; top: 110px; z-index: 10; cursor: pointer;}
+	.right{width: 25px; height: 24px; background: url(images/fx2.png) 0 0 no-repeat; position: absolute; right: 0; top: 110px; z-index: 10;cursor: pointer;}
+</style>
+<script>
+function byClass(el,oClass){
+	var aEl=el.getElementsByTagName("*");
+	var arr=[];
+	for (var i=0; i<aEl.length; i++){
+		if (aEl[i].className==oClass){
+			arr.push(aEl[i]);
+		}
+	}
+	return arr;
+}
+	
+window.onload=function (){
+	var oDiv=document.getElementById("div1");
+	var oCon=byClass(oDiv,'con');
+	var aDivLi=oCon[0].children;
+	var oNav=byClass(oDiv,'nav')[0];
+	var aNavLi=oNav.children;
+	var left=oDiv.getElementsByTagName('p')[0];
+	var right=oDiv.getElementsByTagName('p')[1];
+	var timer=null;
+	var timer2=null;
+	var num=0;
+	function move(num){
+		clearInterval(timer);
+		for (var j=0; j<aDivLi.length; j++){
+			aNavLi[j].style.backgroundColor="red";
+			aDivLi[j].style.opacity=0;
+		}
+		aNavLi[num].style.backgroundColor="#666";
+		var ind=0;
+		timer=setInterval(function (){
+			ind+=0.02;
+			if (ind>=1){
+				ind=1;
+				clearInterval(timer);
+			}
+			aDivLi[num].style.opacity=ind;
+		},25);
+	}
+
+	function automove() {
+		num++;
+		if (num>=aDivLi.length){
+			num=0;
+			move(num);
+		};
+		move(num);
+	};
+
+	timer2=setInterval(automove,2000); //进入页面执行
+
+	for (var i=0; i<aNavLi.length; i++){
+		aNavLi[i].index=i;
+		aNavLi[i].onmouseover=function (){
+			clearInterval(timer2);
+			num=this.index;/*同步下标*/
+			move(num);
+		}
+		aNavLi[i].onmouseout=function (){
+			timer2=setInterval(automove,2000);
+		}
+	}
+	
+	left.onclick=function () {
+		clearInterval(timer2);
+		num--;
+		if (num<0) {
+			num=aDivLi.length-1;
+		};
+		move(num);
+		timer2=setInterval(automove,2000);
+	}
+	right.onclick=function () {
+		clearInterval(timer2);
+		num++;
+		if (num>=aDivLi.length){
+			num=0;
+		};
+		move(num);
+		timer2=setInterval(automove,2000);
+	}
+}
+</script>
+</head>
+
+<body>
+<div id="div1">
+	<ul class="con">
+        <li class="show"><img src="images/1.jpg" /></li>
+        <li><img src="images/2.jpg" /></li>
+        <li><img src="images/3.jpg" /></li>
+        <li><img src="images/4.jpg" /></li>
+        <li><img src="images/5.jpg" /></li>
+    </ul>
+    <ol class="nav">
+    	<li class="active">1</li>
+        <li>2</li>
+        <li>3</li>
+        <li>4</li>
+        <li>5</li>
+    </ol>
+    <p class="left"></p>
+    <p class="right"></p>
+</div>
+</body>
+</html>

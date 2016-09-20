@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>js控制页面3</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+</head>
+<body>
+	<p><span>页面三</span></p>
+	<span id="num">10</span>
+	<span>秒后自动返回上一页</span>
+</body>
+<script>
+	var x=10;
+	var time=null;
+	time=setInterval(function (){
+		x--;
+		document.getElementById('num').innerHTML=x;
+		if (x==0) {
+			// window.history.back();
+			window.history.go(-1);
+			clearInterval(time);
+		};
+	},1000)
+
+</script>
+</html>

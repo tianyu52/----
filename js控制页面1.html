@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>js控制页面1</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+</head>
+<body>
+	<div>
+		<p><span>页面一</span></p>
+		<a href="js控制页面2.html" target="_self">本窗口打开页面二</a>
+		<a href="js控制页面2.html" target="_blank">新窗口打开页面二</a>
+	</div>
+	<input type="button" value="本窗口打开页面二"/>
+	<input type="button" value="新窗口打开页面二"/>
+</body>
+<script>
+	var btns=document.getElementsByTagName('input');
+
+	btns[0].onclick=function (){
+		window.open("js控制页面2.html","_self");
+	}
+	btns[1].onclick=function (){
+		window.open("js控制页面2.html","_blank");
+	}
+</script>
+</html>

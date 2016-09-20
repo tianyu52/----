@@ -1,0 +1,132 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>测试</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<link rel="stylesheet" href="reset.css">
+<style>
+#out{width: 480px; margin:10px auto 0; background: #f4f4f4; border: 1px solid #ccc; padding: 10px;}
+#out div{margin-top: 10px;}
+#bt{width: 420px; font-size: 16px; padding: 5px 10px;}
+#nr{width: 420px; height: 110px; font-size: 16px; padding: 5px 10px;}
+#out #sr{text-align: right; font-size: 14px; color: green; margin-top: 0px;}
+#btn{padding: 5px 16px; font-size: 20px;}
+#list{margin-top: 10px;}
+#list li{background: #f9f9f9; overflow: hidden;}
+#list h3{font-size: 18px; height: 18px; background: #ccc;padding: 4px 0;}
+#list h3 a{color: red; float: right; margin-right: 5px;}
+#list p{text-indent: 2em; padding: 5px; line-height: 150%; font-size: 14px;}
+</style>
+</head>
+<body>
+<div id="out">
+	<div>
+		标题：<input type="text" id="bt" value="">
+	</div>
+	<div>
+		内容：<textarea id="nr"></textarea>
+	</div>
+	<div id="sr">还可以输入<span id="num">200</span>字</div>
+	<div><input type="button" value="发 布" id="btn"></div>
+	<div>
+		<h1>显示内容</h1>
+		<ul id="list">
+			<!-- <li>
+				<h3>我是标题<a href="javascript:;">X</a></h3><p>空间按规划将开始空间按规划将开始空间按规划将开始空间按规划将开始将开始空间按规划将开始将开始空间按规划将开始</p>
+			</li> -->
+		</ul>
+	</div>
+</div>
+</body>
+<script type="text/javascript" src="tween.js"></script>
+<script>
+var bt=document.getElementById('bt');
+var nr=document.getElementById('nr');
+var sr=document.getElementById('sr');
+var num=document.getElementById('num');
+var btn=document.getElementById('btn');
+var list=document.getElementById('list');
+var time=null,time2=null,step=0;
+btn.onclick=function (){
+	if (nr.value.length>200) {
+		nr.value=nr.value.substring(0,200);
+	};
+	var oli=document.createElement('li');
+	oli.innerHTML='<h3>'+bt.value+'<a href="javascript:;">X</a></h3><p>'+nr.value+'</p>';
+	// list.appendChild(oli);
+	// list.insertBefore(oli,list.children[0]);
+
+	function move(){
+		var start=0;
+		var end=oli.offsetHeight;
+		step=0;
+		oli.style.height='0px';
+		time2=setInterval(function (){
+			step++;
+			if (step>=10) {
+				clearInterval(time2);
+			};
+			// start+=end/10;
+			// oli.style.height=start+'px';
+			oli.style.height=Tween.Bounce.easeOut(step,start,end,10)+'px';
+		},30)
+	}
+
+	if (list.children.length==0) {
+		list.appendChild(oli);
+		move();
+		bt.value='';
+		nr.value='';
+		num.innerHTML=200;
+	} else{
+		list.insertBefore(oli,list.children[0]);
+		move();
+		bt.value='';
+		nr.value='';
+		num.innerHTML=200;
+	};
+
+	var remove=list.getElementsByTagName('a');
+	for (var i = 0; i < remove.length; i++) {
+		remove[i].onclick=function (){
+			var ali=this.parentNode.parentNode;
+			var start=ali.offsetHeight;
+			var end=0;
+			step=0;
+			time2=setInterval(function (){
+				step++;
+				if (step>10) {
+					clearInterval(time2);
+					list.removeChild(ali);
+				};
+				// start+=end/10;
+				// ali.style.height=start+'px';
+				ali.style.height=Tween.Bounce.easeOut(step,start,end,10)+'px';
+			},30)
+			
+		}
+	};
+}
+
+
+nr.onfocus=function (){
+	time=setInterval(function (){
+		var lenmax=200;
+		var lentxt=nr.value.length;
+		lenmax=lenmax-lentxt;
+		if (lenmax<0) {
+			sr.style.color='red';
+		} else{
+			sr.style.color='green';
+		};
+		num.innerHTML=lenmax;
+		// console.log(lenmax);
+	},50)
+}
+nr.onblur=function (){
+	clearInterval(time);
+}
+</script>
+</html>
